@@ -1,0 +1,196 @@
+# Docker Laravel Template (DLT)
+# ===========================================================================
+# BASE CONFIGURATION
+# ---------------------------------------------------------------------------
+# This file contains settings common to ALL environments.
+# It is always combined with an environment-specific override file:
+#   Development: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+#   Production:  docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+# ===========================================================================
+
+# =====================================================================
+# 1. NETWORKS
+# =====================================================================
+networks:
+  web-app:
+    name: ${COMPOSE_PROJECT_NAME}_app_net
+
+# =====================================================================
+# 2. SERVICES
+# =====================================================================
+services:
+  # +----------------------+ #
+  # | Container: NginX     | #
+  # +----------------------+ #
+  webserver:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_nginx
+    build:
+      context: .
+      dockerfile: containers/nginx/Dockerfile
+    image: ${COMPOSE_PROJECT_NAME}/nginx:stable-alpine
+    depends_on:
+      - php
+      - database
+
+  # +----------------------+ #
+  # | Container: PHP       | #
+  # +----------------------+ #
+  php:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_php
+    build:
+      context: .
+      dockerfile: containers/php/Dockerfile
+      args:
+        PHP_VERSION: "${PHP_VERSION}"
+        SYS_ENV: "${SYS_ENV}"
+    image: ${COMPOSE_PROJECT_NAME}/php:${PHP_VERSION}-fpm-alpine
+
+  # +----------------------+ #
+  # | Container: MySQL     | #
+  # +----------------------+ #
+  database:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql
+    build:
+      context: .
+      dockerfile: containers/mysql/Dockerfile
+      args:
+        DB_VERSION: "${DB_VERSION}"
+    image: ${COMPOSE_PROJECT_NAME}/mysql:${DB_VERSION}
+    env_file:
+      - "${PATH_ENVIRONMENTS}/${SYS_ENV}.env"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      SERVICE_TAGS: ${SYS_ENV}
+      SERVICE_NAME: mysql
+
+  # +----------------------+ #
+  # | Container: Composer  | #
+  # +----------------------+ #
+  composer:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_composer
+    build:
+      context: .
+      dockerfile: containers/composer/Dockerfile
+      additional_contexts:
+        base: service:php
+    image: ${COMPOSE_PROJECT_NAME}/composer:latest
+    working_dir: /var/www/html
+    volumes:
+      - "${PATH_SOURCE_LOCAL}:${PATH_SOURCE_LIVE}"
+      - vendor_data:/var/www/html/vendor
+    depends_on:
+      - php
+    entrypoint: ['composer']
+
+  # +----------------------+ #
+  # | Container: NPM       | #
+  # +----------------------+ #
+  npm:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_npm
+    image: node:${NODE_VERSION}-alpine
+    working_dir: /var/www/html
+    volumes:
+      - "${PATH_SOURCE_LOCAL}:${PATH_SOURCE_LIVE}"
+      - node_modules_data:/var/www/html/node_modules
+    depends_on:
+      - php
+    entrypoint: ['npm']
+
+  # +----------------------+ #
+  # | Container: Artisan   | #
+  # +----------------------+ #
+  artisan:
+    networks:
+      - web-app
+    container_name: ${COMPOSE_PROJECT_NAME}_artisan
+    build:
+      context: .
+      dockerfile: containers/composer/Dockerfile
+      additional_contexts:
+        base: service:php
+    image: ${COMPOSE_PROJECT_NAME}/artisan:latest
+    working_dir: /var/www/html
+    env_file:
+      - "${PATH_ENVIRONMENTS}/${SYS_ENV}.env"
+    volumes:
+      - "${PATH_SOURCE_LOCAL}:${PATH_SOURCE_LIVE}"
+      - vendor_data:/var/www/html/vendor
+    depends_on:
+      - php
+      - database
+    entrypoint: ['php', 'artisan']
+
+  # +------------------------------------------------------+ #
+  # | Container: Queue Worker (uncomment when needed)      | #
+  # +------------------------------------------------------+ #
+  # queue:
+  #   networks:
+  #     - web-app
+  #   container_name: ${COMPOSE_PROJECT_NAME}_queue
+  #   build:
+  #     context: .
+  #     dockerfile: containers/composer/Dockerfile
+  #     additional_contexts:
+  #       base: service:php
+  #   image: ${COMPOSE_PROJECT_NAME}/queue:latest
+  #   working_dir: /var/www/html
+  #   env_file:
+  #     - "${PATH_ENVIRONMENTS}/${SYS_ENV}.env"
+  #   volumes:
+  #     - "${PATH_SOURCE_LOCAL}:${PATH_SOURCE_LIVE}"
+  #     - vendor_data:/var/www/html/vendor
+  #   depends_on:
+  #     - php
+  #     - database
+  #   command: ['php', 'artisan', 'queue:work', '--sleep=3', '--tries=3', '--max-time=3600']
+  #   restart: unless-stopped
+
+  # +------------------------------------------------------+ #
+  # | Container: Scheduler (uncomment when needed)         | #
+  # +------------------------------------------------------+ #
+  # scheduler:
+  #   networks:
+  #     - web-app
+  #   container_name: ${COMPOSE_PROJECT_NAME}_scheduler
+  #   build:
+  #     context: .
+  #     dockerfile: containers/composer/Dockerfile
+  #     additional_contexts:
+  #       base: service:php
+  #   image: ${COMPOSE_PROJECT_NAME}/scheduler:latest
+  #   working_dir: /var/www/html
+  #   env_file:
+  #     - "${PATH_ENVIRONMENTS}/${SYS_ENV}.env"
+  #   volumes:
+  #     - "${PATH_SOURCE_LOCAL}:${PATH_SOURCE_LIVE}"
+  #     - vendor_data:/var/www/html/vendor
+  #   depends_on:
+  #     - php
+  #     - database
+  #   command: ['php', 'artisan', 'schedule:work']
+  #   restart: unless-stopped
+
+# =====================================================================
+# 3. VOLUMES
+# =====================================================================
+volumes:
+  # MySQL data persistence
+  mysql_data:
+    driver: local
+  # Composer dependencies (vendor folder)
+  vendor_data:
+    driver: local
+  # NPM/Node dependencies (node_modules folder)
+  node_modules_data:
+    driver: local

@@ -1,0 +1,50 @@
+# ==================================
+# IDE & Editor
+# ==================================
+/.idea
+/.vscode
+*.swp
+*.swo
+
+# ==================================
+# OS Files
+# ==================================
+.DS_Store
+Thumbs.db
+
+# ==================================
+# Docker - Environment secrets
+# ==================================
+# Credential files (only .example files are committed)
+docker/environments/dev.env
+docker/environments/staging.env
+docker/environments/prod.env
+
+# ==================================
+# Node / NPM
+# ==================================
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ==================================
+# PHP / Composer
+# ==================================
+/src/vendor/
+.phpunit.result.cache
+
+# ==================================
+# Laravel
+# ==================================
+/src/.env
+/src/storage/*.key
+/src/bootstrap/cache/*.php
+/src/public/hot
+/src/public/storage
+
+# ==================================
+# Legacy (Vagrant / Homestead)
+# ==================================
+/.vagrant
+Homestead.yaml
+Homestead.json
