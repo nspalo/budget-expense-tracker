@@ -18,13 +18,6 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Docker Credentials
-    - name: Docker Login
-      uses: docker/login-action@v3
-      with:
-        username: ${{ secrets.DOCKER_USER }}
-        password: ${{ secrets.DOCKER_KEY }}
-
     # Set up environment file for Docker Compose
     - name: Set up environment
       run: |
