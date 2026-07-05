@@ -7,8 +7,8 @@
 | # | Spec | Requirements | Branch | Status |
 |---|------|---|---|---|
 | 1 | foundation-infrastructure | 9, 10, 11, 13 | feature/BETA-004 | ✅ Done |
-| 2 | auth-module | 1, 14 | feature/BETA-005 | 🔄 Next |
-| 3 | core-entities | 2, 3, 4 | feature/BETA-006 | ⬜ Planned |
+| 2 | auth-module | 1, 14 | feature/BETA-005 | ✅ Done |
+| 3 | core-entities | 2, 3, 4 | feature/BETA-006 | 🔄 Next |
 | 4 | transactions | 5 | feature/BETA-007 | ⬜ Planned |
 | 5 | budgets-dashboard | 6, 7 | feature/BETA-008 | ⬜ Planned |
 | 6 | installments | 8 | feature/BETA-009 | ⬜ Planned |
