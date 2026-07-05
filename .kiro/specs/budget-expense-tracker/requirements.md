@@ -1,5 +1,21 @@
 # Requirements Document
 
+## Implementation Plan
+
+> Tracks how this backlog is split into focused specs for implementation. Each spec = one branch = one PR.
+
+| # | Spec | Requirements | Branch | Status |
+|---|------|---|---|---|
+| 1 | foundation-infrastructure | 9, 10, 11, 13 | feature/BETA-004 | ✅ Done |
+| 2 | auth-module | 1, 14 | feature/BETA-005 | 🔄 Next |
+| 3 | core-entities | 2, 3, 4 | feature/BETA-006 | ⬜ Planned |
+| 4 | transactions | 5 | feature/BETA-007 | ⬜ Planned |
+| 5 | budgets-dashboard | 6, 7 | feature/BETA-008 | ⬜ Planned |
+| 6 | installments | 8 | feature/BETA-009 | ⬜ Planned |
+| 7 | graphql-api | 12 | feature/BETA-010 | ⬜ Planned |
+
+**Dependency order:** 1 → 2 → 3 → 4 → 5 → 6 → 7 (each depends on the one before it)
+
 ## Introduction
 
 Budget & Expense Tracker is a personal finance application built around a single continuous ledger with dual-axis tracking. Every transaction is recorded with both a billing period (accrual view — when a cost is *for*) and a payment date (cash view — when money actually leaves the account). This dual-axis approach enables users to measure their true cost of living per month while simultaneously monitoring real-time liquidity across their accounts.
