@@ -165,9 +165,11 @@ enum TransactionType: string
 
 enum AccountType: string
 {
-    case Bank = 'bank';
-    case Wallet = 'wallet';
+    case BankAccount = 'bank_account';
+    case DebitCard = 'debit_card';
+    case EWallet = 'e_wallet';
     case CreditCard = 'credit_card';
+    case Cash = 'cash';
 }
 
 enum InstallmentStatus: string
