@@ -110,6 +110,7 @@ sequenceDiagram
 enum AccountType: string
 {
     case BankAccount = 'bank_account';
+    case DebitCard = 'debit_card';
     case EWallet = 'e_wallet';
     case CreditCard = 'credit_card';
     case Cash = 'cash';
@@ -432,7 +433,7 @@ Alternatively, the application-level uniqueness check in the service layer combi
 
 ### Property 4: Account type validation rejects non-enum values
 
-*For any* string that does not match one of the four valid AccountType backing values ("bank_account", "e_wallet", "credit_card", "cash"), the AccountService SHALL reject the operation with an invalid-type error.
+*For any* string that does not match one of the five valid AccountType backing values ("bank_account", "debit_card", "e_wallet", "credit_card", "cash"), the AccountService SHALL reject the operation with an invalid-type error.
 
 **Validates: Requirements 2.3, 3.4**
 
