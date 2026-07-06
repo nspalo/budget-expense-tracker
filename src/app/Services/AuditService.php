@@ -101,8 +101,12 @@ final class AuditService
         ?array $newValues,
     ): void {
         try {
+            // Use auth user ID if available; fall back to model's user_id
+            // (handles cases like registration where auth isn't set yet).
+            $userId = Auth::id() ?? $model->getAttribute('user_id');
+
             AuditLog::create([
-                'user_id' => Auth::id(),
+                'user_id' => $userId,
                 'auditable_type' => $model->getMorphClass(),
                 'auditable_id' => $model->getKey(),
                 'event' => $event,

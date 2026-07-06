@@ -8,8 +8,8 @@
 |---|------|---|---|---|
 | 1 | foundation-infrastructure | 9, 10, 11, 13 | feature/BETA-004 | ✅ Done |
 | 2 | auth-module | 1, 14 | feature/BETA-005 | ✅ Done |
-| 3 | core-entities | 2, 3, 4 | feature/BETA-006 | 🔄 Next |
-| 4 | transactions | 5 | feature/BETA-007 | ⬜ Planned |
+| 3 | core-entities | 2, 3, 4 | feature/BETA-006 | ✅ Done |
+| 4 | transactions | 5 | feature/BETA-007 | 🔄 Next |
 | 5 | budgets-dashboard | 6, 7 | feature/BETA-008 | ⬜ Planned |
 | 6 | installments | 8 | feature/BETA-009 | ⬜ Planned |
 | 7 | graphql-api | 12 | feature/BETA-010 | ⬜ Planned |
